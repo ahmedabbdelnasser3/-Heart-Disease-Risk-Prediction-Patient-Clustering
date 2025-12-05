@@ -11,16 +11,14 @@ from sklearn.manifold import TSNE
 import plotly.express as px
 import shap
 
-# -------------------------
 # App config & logger
-# -------------------------
 st.set_page_config(layout="wide", page_title="CardioCare — Heart Risk & Clustering")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# -------------------------
+
 # Helpers & safe utilities
-# -------------------------
+
 @st.cache_data
 def load_csv_safely(path):
     return pd.read_csv(path)
@@ -39,9 +37,9 @@ def load_data(proj_dir):
 def cap_bp(X: pd.DataFrame) -> pd.DataFrame:
     X = X.copy()
     if 'ap_hi' in X.columns:
-        X['ap_hi'] = X['ap_hi'].clip(80, 250)  # realistic systolic lower bound 80
+        X['ap_hi'] = X['ap_hi'].clip(80, 250) 
     if 'ap_lo' in X.columns:
-        X['ap_lo'] = X['ap_lo'].clip(40, 200)  # realistic diastolic lower bound 40
+        X['ap_lo'] = X['ap_lo'].clip(40, 200)  
     return X
 
 # Fit preprocessing + KMeans on numeric features
@@ -97,9 +95,7 @@ def plot_shap_force(explainer, shap_values, X_row):
             logger.error(f"Fallback SHAP plotting also failed: {e2}")
             st.write("Unable to render SHAP plot for this prediction.")
 
-# -------------------------
 # App UI & logic
-# -------------------------
 st.title("CardioCare — Heart Disease Risk Prediction & Patient Clustering")
 
 proj_dir = os.path.dirname(__file__)
@@ -255,9 +251,7 @@ else:
         csv_bytes = batch_df.to_csv(index=False).encode('utf-8')
         st.download_button("Download Predictions CSV", csv_bytes, file_name="batch_predictions.csv")
 
-# -----------------------------------
 # Cluster Overview (visual)
-# -----------------------------------
 try:
     st.subheader("Patient Clusters Overview (t-SNE)")
     sample = X_train.sample(min(1500, len(X_train)), random_state=42)
